@@ -25,7 +25,10 @@ export default class Target extends React.Component{
         }
         
         componentDidMount(){
-            this.generateNewTarget();
+            //this.generateNewTarget();
+        }
+        playGame(){
+           this.generateNewTarget(); 
         }
         
         generateNewTarget(){

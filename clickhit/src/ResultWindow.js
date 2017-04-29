@@ -8,7 +8,7 @@ export default class ResultWindow extends React.Component {
         super(props);
         //const cookies = new Cookies();
         
-        this.state = {window: 'yourResult', 'userName': this.props.app.state.userName, 'inputDevice': this.props.app.state.inputDevice}
+        this.state = {window: 'welcome', 'userName': this.props.app.state.userName, 'inputDevice': this.props.app.state.inputDevice}
         //this.handleInputChange = this.handleInputChange.bind(this);
         this.handleInputChanges = this.handleInputChanges.bind(this);
         this.handleNameSubmit = this.handleNameSubmit.bind(this);
@@ -47,10 +47,17 @@ export default class ResultWindow extends React.Component {
     handleWindowChange(win){
         this.setState({'window': win});
     }
-    
+    goPlayGame(){
+        this.props.app.setState({showResultWindow: false});
+        this.setState({window: 'yourResult'});
+        this.props.app.playGame();
+        
+    }
     render() {
         var window;
-        if (this.state.window == 'yourResult') {
+        if(this.state.window == 'welcome'){
+            window = this.welcome();
+        }else if (this.state.window == 'yourResult') {
             window = this.yourResult();
         } else if (this.state.window == 'enterName') {
             window = this.enterName();
@@ -74,6 +81,24 @@ export default class ResultWindow extends React.Component {
                 
                 </div>
                 );
+    }
+    welcome(){
+        var res = {};
+        res.title = 'ClickHit! the minigame'
+        res.body =(
+                <div>
+                    This is minigame created in react.<br/>
+                    Object of this game is hitting randomly appeared targets. <br/> 
+                    You are beeing rewared by score, according to speed of hit and dexterity.<br/>
+                    Challenge with your friends who can play bigger score and lower respond time.
+                    </div>
+                );
+        res.footer= (
+                <div>
+                    <Button bsStyle="primary" onClick={(e) => this.goPlayGame()} >Play!</Button>
+                    </div>
+                );
+        return res;
     }
     yourResult() {
         var res={};

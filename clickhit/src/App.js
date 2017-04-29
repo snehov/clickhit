@@ -26,7 +26,8 @@ class App extends Component {
                     targetNO: 0, 
                     missClicks: 0, 
                     hitStats:[], 
-                    showResultWindow: false, 
+                    showResultWindow: true, 
+                    play: false,
                     resultData: {avgTime:0},
                     userName: userName, 
                     inputDevice: inputDevice
@@ -55,14 +56,19 @@ class App extends Component {
   setScore(score){
       this.setState({score: score});
   }
+  playGame(){
+      console.log('volam plat na rooru');
+        this.target.playGame();
+  }
   render() {
     return (
             <div className="App" >
                 <div id="voidArea" onClick={this.missClick}></div>
                 <ControlPanel score={this.state.score} app={this} />
-                <Target addScoreHit={this.addScoreHit} plusOne={this.plusOne} app={this}/>        
+                <Target addScoreHit={this.addScoreHit} plusOne={this.plusOne} app={this}  ref={instance => { this.target = instance; }} />        
                 <ScoreCalculator  ref="pokus"/>
                 <ResultWindow showResultWindow={this.state.showResultWindow} app={this}/>
+                        
                 
             </div>
             
