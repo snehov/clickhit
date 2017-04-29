@@ -22,11 +22,10 @@
 
 .headBar {
   background-color: #b6f008; }
-
-.headBar .score {
-  border: 1px solid red;
-  color: blue;
-  font-weight: bold; }
+  .headBar .score {
+    border: 1px solid red;
+    color: blue;
+    font-weight: bold; }
 
 #theTarget {
   position: absolute;

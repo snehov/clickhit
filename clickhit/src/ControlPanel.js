@@ -11,7 +11,7 @@ export default class ControlPanel extends React.Component{
     render() {
         
         return (
-                <Grid className="headBar" fluid="true">
+                <Grid className="headBar" fluid={true}>
                     <Row>
                         <Col md={4}>levy roh</Col>
                         <Col md={4}><div className="logo">ClickHit!</div></Col>

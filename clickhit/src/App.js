@@ -7,12 +7,39 @@ import ScoreCalculator, {AddHitScore} from './ScoreCalculator';
 import Target from './Target';
 import ResultWindow from './ResultWindow';
 
+import Cookies from 'universal-cookie';
+
 class App extends Component {
   constructor(){
       super();
-      this.state = {score: 0, targetNO: 0, missClicks: 0, hitStats:[], showResultWindow: false, resultData: {avgTime:0} };
+      this.cookies = new Cookies();
+      var userName = "";
+      var inputDevice = "";
+      if(this.cookies.get('userName')){
+          userName = this.cookies.get('userName');
+          inputDevice = this.cookies.get('inputDevice');
+          console.log("známý hráč: "+ userName+", na: "+inputDevice);
+      }
+     //cookies.set('userName', 'Sněha2', { path: '/' });
+     //this.setCookieName();
+      this.state = {score: 0, 
+                    targetNO: 0, 
+                    missClicks: 0, 
+                    hitStats:[], 
+                    showResultWindow: false, 
+                    resultData: {avgTime:0},
+                    userName: userName, 
+                    inputDevice: inputDevice
+                };
       this.numTargets = 3;
   }   
+  
+  setCookieName (name){
+      this.cookies.set('userName', name, { path: '/' });
+  }
+  setCookieDevice(value){
+      this.cookies.set('inputDevice', value, { path: '/' });
+  }
   
   addScoreHit = (hitTime) => {
       const newScore = AddHitScore(this.state.score, hitTime, this.state.missClicks);
@@ -23,13 +50,12 @@ class App extends Component {
       this.setState({'hitStats': tmp });
       // -------------------------
       this.setScore(newScore);
-      console.log("hitstats: ", this.state.hitStats);
+      //console.log("hitstats: ", this.state.hitStats);
   }
   setScore(score){
       this.setState({score: score});
   }
   render() {
-      // 
     return (
             <div className="App" >
                 <div id="voidArea" onClick={this.missClick}></div>
@@ -37,6 +63,7 @@ class App extends Component {
                 <Target addScoreHit={this.addScoreHit} plusOne={this.plusOne} app={this}/>        
                 <ScoreCalculator  ref="pokus"/>
                 <ResultWindow showResultWindow={this.state.showResultWindow} app={this}/>
+                
             </div>
             
                 
