@@ -5,23 +5,18 @@ export default class Target extends React.Component{
         constructor(props){
             super();
             this.state = {  hidden: true, 
-                            startTime: 0, 
-                            targetWidth: 0,
-                            targetHeight: 0,
-                            targetDisplayProps: {backgroundColor: 'red'}
+                            startTime: 0,    
+                            targetDisplayProps: {}
                         }
             this.minWaitingTime = 300; //miliseconds
             this.maxWaitingTime = 10000; //miliseconds
-            this.targetPosition = {top:'0px'};
-        
+            this.targetPosition = {};
         }
-        
-        
-        render(){
-            
+         
+        render(){    
             return(
                     <div    id="theTarget"
-                            className={(this.state.hidden ?'targetHidden':'targetVisible')}
+                            className={[(this.state.hidden ?'targetHidden':'targetVisible'), 'pokus'].join(' ')}
                             style={this.state.targetDisplayProps}
                             onClick={this.handleTargetHit}>
                     
@@ -45,6 +40,7 @@ export default class Target extends React.Component{
             
             const displayProps = {'top': top, 'left': left, 'width': targetSize.width+'px', 'height': targetSize.height+'px'}
             this.setState({targetDisplayProps: displayProps});
+            this.props.app.setState({missClicks: 0});
             this.waitForNewTarget(displayProps);
         }
         
@@ -57,10 +53,7 @@ export default class Target extends React.Component{
              ); 
         }
         drawTarget(){
-            console.log("kreslim: "+Date.now());
-            //clearTimeout(this.timerID);
             this.setState({hidden:false, startTime: Date.now()});
-            
         }
         
         handleTargetHit = () => {
@@ -68,8 +61,11 @@ export default class Target extends React.Component{
             this.props.addScoreHit(hitTime);//e.target.value);
             this.setState({hidden: true});
             
-            this.generateNewTarget();
-
+            if(this.props.app.state.targetNO == this.props.app.numTargets ){
+                this.props.app.over();
+            }else{
+                this.generateNewTarget();
+            }
         }
         
         calcTargetSize(){

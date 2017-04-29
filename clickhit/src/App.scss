@@ -37,6 +37,30 @@
     height: 100px; 
     cursor: pointer;
 }
-.targetHidden{
+.hidden, .targetHidden{
     display:none;
+}
+visible, .targetVisible{
+    display: block;
+}
+#voidArea{
+    position: absolute;
+    z-index: -1;
+    top: 30px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+
+}
+.resultWindow{
+    .modal-dialog{
+        margin-top:90px;
+    }
+    .score{
+        font-weight: bold;
+        font-size:20px;
+    }
+    .avgTime{
+        font-weight: bold;
+    }
 }
