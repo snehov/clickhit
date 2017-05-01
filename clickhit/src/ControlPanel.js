@@ -13,12 +13,12 @@ export default class ControlPanel extends React.Component{
         return (
                 <Grid className="headBar" fluid={true}>
                     <Row>
-                        <Col md={4}>levy roh</Col>
-                        <Col md={4}><div className="logo">ClickHit!</div></Col>
-                        <Col md={4}>
+                        <Col xs={4}>levy roh</Col>
+                        <Col xs={4}><div className="logo" >ClickHit!</div></Col>
+                        <Col xs={4}>
                         <Row>
-                            <Col md={6}>{this.props.app.state.targetNO}/{this.props.app.numTargets}</Col>
-                            <Col md={6} className="score">{this.props.score}</Col>
+                            <Col xs={4} md={6}>{this.props.app.state.targetNO}/{this.props.app.numTargets}</Col>
+                            <Col xs={8} md={6} className="score">{this.props.score}</Col>
                         </Row>
                         </Col>
                 

@@ -9,7 +9,7 @@ export default class Target extends React.Component{
                             targetDisplayProps: {}
                         }
             this.minWaitingTime = 300; //miliseconds
-            this.maxWaitingTime = 10000; //miliseconds
+            this.maxWaitingTime = 7000; //miliseconds
             this.targetPosition = {};
         }
          
@@ -48,7 +48,12 @@ export default class Target extends React.Component{
         }
         
         waitForNewTarget(displayProps){
-           const waitTime = getRandomInt(this.minWaitingTime, this.maxWaitingTime);
+           let waitTime; 
+           if(this.props.app.state.targetNO == 0){
+                waitTime = 2000;
+           } else {
+                waitTime = getRandomInt(this.minWaitingTime, this.maxWaitingTime);
+           }
            console.log("budeme čekat "+waitTime+" ms s těmito props: "+JSON.stringify(displayProps)+", browser ma H:"+window.innerHeight);
            setTimeout(() => {
                     this.drawTarget()

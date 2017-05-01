@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 
 
 
+
 export default class ResultWindow extends React.Component {
     constructor(props) {
         super(props);
@@ -61,6 +62,8 @@ export default class ResultWindow extends React.Component {
             window = this.yourResult();
         } else if (this.state.window == 'enterName') {
             window = this.enterName();
+        } else if (this.state.window == 'saveLoadResults') {
+            window = this.saveLoadResults();
         } else if (this.state.window == 'othersScore') {
             window = this.othersScore();
         }
@@ -83,10 +86,12 @@ export default class ResultWindow extends React.Component {
                 );
     }
     welcome(){
+        
         var res = {};
         res.title = 'ClickHit! the minigame'
         res.body =(
                 <div>
+                    
                     This is minigame created in react.<br/>
                     Object of this game is hitting randomly appeared targets. <br/> 
                     You are beeing rewared by score, according to speed of hit and dexterity.<br/>
@@ -121,23 +126,49 @@ export default class ResultWindow extends React.Component {
             
             res.footer =(<div>
                         {this.playAgainButton()}
-                        <Button bsStyle="primary" onClick={(e) => this.handleWindowChange('othersScore')}>Compare with others</Button>
+                        <Button bsStyle="primary" onClick={(e) => this.handleWindowChange('saveLoadResults')}>Compare with others</Button>
                     </div>)    
         return res;
     }
 
+    saveLoadResults(){
+        const data = {nick: this.state.userName, score: this.props.app.state.score, input: this.state.inputDevice, avgTime: this.props.app.state.resultData.avgTime};
+        this.props.app.serverData.insertScore(data, this.props.app.testFNC() );
+        
+        //this.othersScore();
+        
+        return {title: 'ClickHit! Scorelist', body: 'Loading data...', footer:''}
+    }
     othersScore() {
         var res = {};
+        const data = this.state.resultsData;
+        console.log("data", data);
         res.title = 'ClickHit! Scorelist';
         res.body = (
                 <div>
+        
                 Select games according to input method: <br/>
-                        <select value={this.state.seznam} name="inputMethod" onChange={this.handleInputChanges}>
+                        <select value={this.state.seznam} name="inputMethod" onChange={this.handleInputChanges} disabled>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
                             <option value="ohter">Other (console, etc..)</option>
                         </select>
+                        
+                        <table className="resultTable">
+                            <tr>
+                            <th>User</th><th>Score</th><th>Avg react time</th><th>Input method</th><th>Played</th>
+                            </tr>
+                            {
+                            data.map(function(row, i){
+                                return <tr key={row.idsc}>
+                                        <td>{row.nick}</td><td>{row.score}</td><td>{row.avg_time}ms</td><td>{row.input}</td><td>{row.games}x</td>
+                                   </tr>
+                                   
+                              })
+                                      
+                             }
+                          </table>
                 </div>
                 );
         res.footer = this.playAgainButton();

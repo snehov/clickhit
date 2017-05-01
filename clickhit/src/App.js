@@ -8,6 +8,7 @@ import Target from './Target';
 import ResultWindow from './ResultWindow';
 
 import Cookies from 'universal-cookie';
+import DataHandler from './DataHandler';
 
 class App extends Component {
   constructor(){
@@ -59,6 +60,7 @@ class App extends Component {
   playGame(){
       console.log('volam plat na rooru');
         this.target.playGame();
+        //this.serverData.insertScore();
   }
   render() {
     return (
@@ -67,7 +69,8 @@ class App extends Component {
                 <ControlPanel score={this.state.score} app={this} />
                 <Target addScoreHit={this.addScoreHit} plusOne={this.plusOne} app={this}  ref={instance => { this.target = instance; }} />        
                 <ScoreCalculator  ref="pokus"/>
-                <ResultWindow showResultWindow={this.state.showResultWindow} app={this}/>
+                <ResultWindow showResultWindow={this.state.showResultWindow} app={this} ref={instance => { this.dialogWindow = instance;}} />
+                <DataHandler ref={instance => { this.serverData = instance; }} app={this} />
                         
                 
             </div>
@@ -78,6 +81,15 @@ class App extends Component {
    
   plusOne = () =>{
       this.setState({targetNO: this.state.targetNO + 1}); 
+  }
+  testFNC(){
+      console.log("testFNCCALLBAK");
+      this.serverData.loadScore("all");
+  }
+  loadResults(data){
+      console.log("mame score data v rootu");
+     
+      this.dialogWindow.setState({window:'othersScore', resultsData: data.data});
   }
   over(){
       var avgTime;

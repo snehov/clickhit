@@ -64,3 +64,20 @@ visible, .targetVisible{
         font-weight: bold;
     }
 }
+.resultTable{
+    width:100%;
+    th{
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 2px solid gray;
+    }
+    td{
+        text-align: left;
+    }
+    tr:hover{
+        background-color: #edfcf0;
+    }
+    tr:nth-child(even) {
+        background-color: #eee; 
+    }
+}

@@ -57,3 +57,16 @@ visible, .targetVisible {
 
 .resultWindow .avgTime {
   font-weight: bold; }
+
+.resultTable {
+  width: 100%; }
+  .resultTable th {
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid gray; }
+  .resultTable td {
+    text-align: left; }
+  .resultTable tr:hover {
+    background-color: #edfcf0; }
+  .resultTable tr:nth-child(even) {
+    background-color: #eee; }
