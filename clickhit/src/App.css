@@ -20,19 +20,37 @@
   to {
     transform: rotate(360deg); } }
 
+body {
+  background-color: #ececec !important; }
+
 .headBar {
-  background-color: #b6f008; }
+  background-color: rgba(50, 50, 50, 0.8);
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  height: 30px; }
+  .headBar * {
+    color: white;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 15pt; }
+  .headBar .user {
+    color: #e3edfc; }
+  .headBar .logo {
+    font-size: 16pt; }
   .headBar .score {
-    border: 1px solid red;
-    color: blue;
+    color: #f36060;
     font-weight: bold; }
 
 #theTarget {
   position: absolute;
-  background-color: blue;
+  background: #009b5a;
+  background: linear-gradient(45deg, #037d4a 0%, #23aa70 100%);
   width: 100px;
   height: 100px;
-  cursor: pointer; }
+  cursor: pointer;
+  border-radius: 3px; }
 
 .hidden, .targetHidden {
   display: none; }
@@ -58,6 +76,9 @@ visible, .targetVisible {
 .resultWindow .avgTime {
   font-weight: bold; }
 
+.resultWindow .modal {
+  position: static !important; }
+
 .resultTable {
   width: 100%; }
   .resultTable th {
@@ -65,8 +86,12 @@ visible, .targetVisible {
     text-align: center;
     border-bottom: 2px solid gray; }
   .resultTable td {
+    text-align: center; }
+  .resultTable td:nth-child(1), .resultTable td:nth-child(2) {
     text-align: left; }
-  .resultTable tr:hover {
-    background-color: #edfcf0; }
   .resultTable tr:nth-child(even) {
     background-color: #eee; }
+  .resultTable tbody tr:hover {
+    background-color: #edfcf0; }
+  .resultTable .me * {
+    font-weight: bold; }

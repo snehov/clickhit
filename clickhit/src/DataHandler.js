@@ -46,16 +46,16 @@ export default class DataHandler extends React.Component {
                 'nick': data.nick,
                 'score': data.score,
                 'avgTime': data.avgTime,
-                'input': data.input,
-                
-                
+                'input': data.input,   
+                'missed': data.missed
             }
                     )
                 .then(
                         res => {
-                            console.log(res.data);
+                            console.log('score inserted', res.data);
                             //this.setState({'data': res.data});
-                            callback;
+                            this.props.app.loadScore();
+                            
                         }
                               
 

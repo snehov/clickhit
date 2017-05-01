@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button,Grid, Row, Col } from 'react-bootstrap';
+
 
 
 
@@ -9,7 +10,7 @@ export default class ResultWindow extends React.Component {
         super(props);
         //const cookies = new Cookies();
         
-        this.state = {window: 'welcome', 'userName': this.props.app.state.userName, 'inputDevice': this.props.app.state.inputDevice}
+        this.state = {window: 'welcome'}
         //this.handleInputChange = this.handleInputChange.bind(this);
         this.handleInputChanges = this.handleInputChanges.bind(this);
         this.handleNameSubmit = this.handleNameSubmit.bind(this);
@@ -27,9 +28,11 @@ export default class ResultWindow extends React.Component {
         //
         if(name == "userName"){
             this.props.app.setCookieName(value);
+            this.props.app.setState({userName:value});
         }
         if(name == "inputMethod"){
             this.props.app.setCookieDevice(value);
+            this.props.app.setState({inputDevice:value});
         }
     }
     /*
@@ -40,9 +43,9 @@ export default class ResultWindow extends React.Component {
     
     handleNameSubmit(event){
         event.preventDefault();
-        this.props.app.setCookieName(this.state.userName);
+        this.props.app.setCookieName(this.props.app.state.userName);
         //this.cookies.set('userName', this.state.userName, { path: '/' });
-        console.log('name: ', this.state.userName)
+        console.log('name: ', this.props.app.state.userName)
         this.handleWindowChange('othersScore');
     }
     handleWindowChange(win){
@@ -92,15 +95,13 @@ export default class ResultWindow extends React.Component {
         res.body =(
                 <div>
                     
-                    This is minigame created in react.<br/>
-                    Object of this game is hitting randomly appeared targets. <br/> 
-                    You are beeing rewared by score, according to speed of hit and dexterity.<br/>
+                    <b>Hit appearing targets as fast as you can!.</b><br/>
                     Challenge with your friends who can play bigger score and lower respond time.
                     </div>
                 );
         res.footer= (
                 <div>
-                    <Button bsStyle="primary" onClick={(e) => this.goPlayGame()} >Play!</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.goPlayGame()} >Play</Button>
                     </div>
                 );
         return res;
@@ -113,7 +114,7 @@ export default class ResultWindow extends React.Component {
                     Your score is: <span className="score">{this.props.app.state.score}</span><br/>
                         Your average react time is: <span className="avgTime">{this.props.app.state.resultData.avgTime}</span> ms <br/>
                         Select yout input method:
-                        <select value={this.state.inputDevice} name="inputMethod" onChange={this.handleInputChanges}>
+                        <select value={this.props.app.state.inputDevice} name="inputMethod" onChange={this.handleInputChanges}>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
@@ -121,7 +122,7 @@ export default class ResultWindow extends React.Component {
                         </select>
                         <br/>
                         Your nickname: 
-                        <input type="text" name="userName"  value={this.state.userName} onChange={this.handleInputChanges}/>
+                        <input type="text" name="userName"  value={this.props.app.state.userName} onChange={this.handleInputChanges}/>
                     </div>);
             
             res.footer =(<div>
@@ -132,8 +133,14 @@ export default class ResultWindow extends React.Component {
     }
 
     saveLoadResults(){
-        const data = {nick: this.state.userName, score: this.props.app.state.score, input: this.state.inputDevice, avgTime: this.props.app.state.resultData.avgTime};
-        this.props.app.serverData.insertScore(data, this.props.app.testFNC() );
+        const data = {
+            nick: this.props.app.state.userName,
+            score: this.props.app.state.score, 
+            input: this.props.app.state.inputDevice, 
+            avgTime: this.props.app.state.resultData.avgTime,
+            missed: this.props.app.state.resultData.missed
+        };
+        this.props.app.serverData.insertScore(data );
         
         //this.othersScore();
         
@@ -144,31 +151,47 @@ export default class ResultWindow extends React.Component {
         const data = this.state.resultsData;
         console.log("data", data);
         res.title = 'ClickHit! Scorelist';
+        const userName = this.props.app.state.userName;
+        
         res.body = (
                 <div>
         
                 Select games according to input method: <br/>
                         <select value={this.state.seznam} name="inputMethod" onChange={this.handleInputChanges} disabled>
+                            <option value="*"> -all- </option>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
                             <option value="ohter">Other (console, etc..)</option>
                         </select>
                         
+                        <div>
                         <table className="resultTable">
+                        <thead>
                             <tr>
-                            <th>User</th><th>Score</th><th>Avg react time</th><th>Input method</th><th>Played</th>
+                            <th>#</th><th>User</th><th>Score</th><th>Avg react time</th>
+                            <th className="hidden-xs">Missed</th><th>Input method</th><th>Played</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             {
                             data.map(function(row, i){
-                                return <tr key={row.idsc}>
-                                        <td>{row.nick}</td><td>{row.score}</td><td>{row.avg_time}ms</td><td>{row.input}</td><td>{row.games}x</td>
+                                let cln="";
+                                if(row.nick == userName){
+                                    cln = "me"
+                                };
+                                return <tr key={row.idsc}
+                                            className={cln}>
+                                        <td>{i+1}</td>    
+                                        <td>{row.nick}</td><td>{row.score}</td><td>{row.avg_time} ms</td>
+                                        <td className="hidden-xs">{row.missed}</td><td>{row.input}</td><td>{row.games}x</td>
                                    </tr>
                                    
-                              })
-                                      
+                              })       
                              }
+                          </tbody>   
                           </table>
+                          </div>
                 </div>
                 );
         res.footer = this.playAgainButton();
@@ -190,7 +213,7 @@ export default class ResultWindow extends React.Component {
                 <form onSubmit={this.handleNameSubmit}>
                     <label>
                         Your name:
-                        <input type="text" name="userName"  value={this.state.userName} onChange={this.handleInputChanges}/>
+                        <input type="text" name="userName"  value={this.props.app.state.userName} onChange={this.handleInputChanges}/>
                     </label>
                     <input type="submit" value="Submit" />
                     </form>

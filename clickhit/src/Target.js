@@ -8,9 +8,10 @@ export default class Target extends React.Component{
                             startTime: 0,    
                             targetDisplayProps: {}
                         }
-            this.minWaitingTime = 300; //miliseconds
-            this.maxWaitingTime = 7000; //miliseconds
+            this.minWaitingTime = 200; //miliseconds
+            this.maxWaitingTime = 6000; //miliseconds
             this.targetPosition = {};
+            
         }
          
         render(){    

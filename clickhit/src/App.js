@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import { Grid, Row, Col } from 'react-bootstrap';
 import ControlPanel from './ControlPanel';
@@ -20,6 +20,8 @@ class App extends Component {
           userName = this.cookies.get('userName');
           inputDevice = this.cookies.get('inputDevice');
           console.log("známý hráč: "+ userName+", na: "+inputDevice);
+      }else{
+          inputDevice = "mouse";
       }
      //cookies.set('userName', 'Sněha2', { path: '/' });
      //this.setCookieName();
@@ -34,6 +36,7 @@ class App extends Component {
                     inputDevice: inputDevice
                 };
       this.numTargets = 3;
+      
   }   
   
   setCookieName (name){
@@ -82,8 +85,8 @@ class App extends Component {
   plusOne = () =>{
       this.setState({targetNO: this.state.targetNO + 1}); 
   }
-  testFNC(){
-      console.log("testFNCCALLBAK");
+  loadScore(){
+      console.log("loading score");
       this.serverData.loadScore("all");
   }
   loadResults(data){
