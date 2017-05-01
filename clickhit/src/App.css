@@ -41,7 +41,16 @@ body {
     font-size: 16pt; }
   .headBar .score {
     color: #f36060;
-    font-weight: bold; }
+    font-weight: bold;
+    cursor: pointer; }
+
+.higherLines {
+  line-height: 31px; }
+
+input, select {
+  height: 24px;
+  padding: 5px;
+  margin: 0px 5px !important; }
 
 #theTarget {
   position: absolute;

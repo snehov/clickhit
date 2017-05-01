@@ -11,10 +11,10 @@ export default class DataHandler extends React.Component {
     }
 
     componentDidMount() {
-        //axios.post(`http://snowsoft.cz/clickhit/write.php?`, {firstName: 'Fred',lastName: 'Flintstone'})
+        //axios.post(`http://snowsoft.cz/clickhit/data.php?`, {firstName: 'Fred',lastName: 'Flintstone'})
         axios({
             method: 'post',
-            url: 'http://snowsoft.cz/clickhit/write.php?akce=getUsername',
+            url: 'http://snowsoft.cz/clickhit/data.php?akce=getUsername',
             data: {
                 user: 'Fred'
             },
@@ -30,7 +30,7 @@ export default class DataHandler extends React.Component {
     }
 
     isNameAvailable(name) {
-        axios.post(`http://snowsoft.cz/clickhit/write.php?akce=getUsername`, {'user': name})
+        axios.post(`http://snowsoft.cz/clickhit/data.php?akce=getUsername`, {'user': name})
                 .then(
                         res => {
                             console.log(res.data);
@@ -41,7 +41,7 @@ export default class DataHandler extends React.Component {
     }
     insertScore(data, callback){
         console.log("zapis score na servere");
-        axios.post(`http://snowsoft.cz/clickhit/write.php?akce=insertScore`, 
+        axios.post(`http://snowsoft.cz/clickhit/data.php?akce=insertScore`, 
             {
                 'nick': data.nick,
                 'score': data.score,
@@ -54,17 +54,18 @@ export default class DataHandler extends React.Component {
                         res => {
                             console.log('score inserted', res.data);
                             //this.setState({'data': res.data});
-                            this.props.app.loadScore();
+                            this.props.app.loadScore(this.props.app.state.inputDevice);
                             
                         }
                               
 
                 )
     }
-    loadScore(group){
-        console.log("zapis score na servere");
-        axios.post(`http://snowsoft.cz/clickhit/write.php?akce=loadScore`, 
-            {
+    loadScore(inputMethod, group){
+        console.log("zapis score na server");
+        axios.post(`http://snowsoft.cz/clickhit/data.php?akce=loadScore`, 
+            {   
+                'input': inputMethod,
                 'group': group
             }
                     )

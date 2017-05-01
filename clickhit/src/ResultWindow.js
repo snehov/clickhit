@@ -1,20 +1,14 @@
 import React from 'react';
 import { Modal, Button,Grid, Row, Col } from 'react-bootstrap';
 
-
-
-
-
 export default class ResultWindow extends React.Component {
     constructor(props) {
         super(props);
-        //const cookies = new Cookies();
-        
-        this.state = {window: 'welcome'}
-        //this.handleInputChange = this.handleInputChange.bind(this);
+        this.state = {window: 'welcome', viewInputMethodScore:'finger'}
         this.handleInputChanges = this.handleInputChanges.bind(this);
+        this.onloadMyInputDevice = this.onloadMyInputDevice.bind(this);
         this.handleNameSubmit = this.handleNameSubmit.bind(this);
-        
+        this.viewInputMethodScore = 'all';
     }
     
     handleInputChanges(event) {
@@ -31,16 +25,21 @@ export default class ResultWindow extends React.Component {
             this.props.app.setState({userName:value});
         }
         if(name == "inputMethod"){
+            this.viewInputMethodScore  = value;
             this.props.app.setCookieDevice(value);
             this.props.app.setState({inputDevice:value});
+            
+        }
+        if(name == "scoreInputMethod"){
+            //this.setState({viewInputMethodScore: value});
+            this.viewInputMethodScore = value;
+            this.props.app.loadScore(value);
         }
     }
-    /*
-    handleInputChange(event) {
-        console.log("change of 'inputMethod' to: ", event.target.value);
-        this.setState({'inputMethod': event.target.value});
-    }*/
-    
+    onloadMyInputDevice(event){
+        //this.viewInputMethodScore = event.target.value;
+        console.log("onloadvalue: ", event.target.value);
+    }
     handleNameSubmit(event){
         event.preventDefault();
         this.props.app.setCookieName(this.props.app.state.userName);
@@ -50,6 +49,18 @@ export default class ResultWindow extends React.Component {
     }
     handleWindowChange(win){
         this.setState({'window': win});
+    }
+    handleSaveNameForm(e){
+        if(this.props.app.state.userName==""){
+            alert("Fill in your nickname");
+        }else{
+            //this.viewInputMethodScore = 'mouse';//this.props.app.state.inputDevice;
+            //let ip = this.props.app.state.inputDevice;
+            //this.setState({viewInputMethodScore: ip});
+             this.viewInputMethodScore = this.props.app.cookies.get('inputDevice');
+            this.handleWindowChange('saveLoadResults');
+            //this.setState({viewInputMethodScore: data.input});
+        }
     }
     goPlayGame(){
         this.props.app.setState({showResultWindow: false});
@@ -95,7 +106,7 @@ export default class ResultWindow extends React.Component {
         res.body =(
                 <div>
                     
-                    <b>Hit appearing targets as fast as you can!.</b><br/>
+                    <b>Hit appearing targets as fast as you can!</b><br/>
                     Challenge with your friends who can play bigger score and lower respond time.
                     </div>
                 );
@@ -107,18 +118,22 @@ export default class ResultWindow extends React.Component {
         return res;
     }
     yourResult() {
+        //this.viewInputMethodScore =    this.props.app.state.inputDevice; 
+    
         var res={};
         res.title = 'Your ClickHit! result';
         
-        res.body = (<div>
+        res.body = (<div className="higherLines">
                     Your score is: <span className="score">{this.props.app.state.score}</span><br/>
                         Your average react time is: <span className="avgTime">{this.props.app.state.resultData.avgTime}</span> ms <br/>
                         Select yout input method:
-                        <select value={this.props.app.state.inputDevice} name="inputMethod" onChange={this.handleInputChanges}>
+                        <select value={this.props.app.state.inputDevice} name="inputMethod" 
+                                onChange={this.handleInputChanges}
+                                onLoad={this.onloadMyInputDevice}>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
-                            <option value="ohter">Other (console, etc..)</option>
+                            <option value="other">Other (console, etc..)</option>
                         </select>
                         <br/>
                         Your nickname: 
@@ -127,7 +142,7 @@ export default class ResultWindow extends React.Component {
             
             res.footer =(<div>
                         {this.playAgainButton()}
-                        <Button bsStyle="primary" onClick={(e) => this.handleWindowChange('saveLoadResults')}>Compare with others</Button>
+                        <Button bsStyle="primary" onClick={(e) => this.handleSaveNameForm()}>Compare with others</Button>
                     </div>)    
         return res;
     }
@@ -140,7 +155,8 @@ export default class ResultWindow extends React.Component {
             avgTime: this.props.app.state.resultData.avgTime,
             missed: this.props.app.state.resultData.missed
         };
-        this.props.app.serverData.insertScore(data );
+        
+        this.props.app.serverData.insertScore(data);
         
         //this.othersScore();
         
@@ -152,24 +168,26 @@ export default class ResultWindow extends React.Component {
         console.log("data", data);
         res.title = 'ClickHit! Scorelist';
         const userName = this.props.app.state.userName;
+        //this.setState({viewInputMethodScore: data.input});
+       
         
         res.body = (
                 <div>
-        
-                Select games according to input method: <br/>
-                        <select value={this.state.seznam} name="inputMethod" onChange={this.handleInputChanges} disabled>
+                    <div   className="higherLines">
+                        Select games according to input method: &nbsp; 
+                        <select value={this.viewInputMethodScore} name="scoreInputMethod" onChange={this.handleInputChanges} >
                             <option value="*"> -all- </option>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
-                            <option value="ohter">Other (console, etc..)</option>
+                            <option value="other">Other (console, etc..)</option>
                         </select>
-                        
-                        <div>
+                     </div>    
+                     <div>
                         <table className="resultTable">
                         <thead>
                             <tr>
-                            <th>#</th><th>User</th><th>Score</th><th>Avg react time</th>
+                            <th>#</th><th>User</th><th>Score</th><th className="hidden-xs">Avg react time</th>
                             <th className="hidden-xs">Missed</th><th>Input method</th><th>Played</th>
                             </tr>
                         </thead>
@@ -183,7 +201,7 @@ export default class ResultWindow extends React.Component {
                                 return <tr key={row.idsc}
                                             className={cln}>
                                         <td>{i+1}</td>    
-                                        <td>{row.nick}</td><td>{row.score}</td><td>{row.avg_time} ms</td>
+                                        <td>{row.nick}</td><td>{row.score}</td><td className="hidden-xs">{row.avg_time} ms</td>
                                         <td className="hidden-xs">{row.missed}</td><td>{row.input}</td><td>{row.games}x</td>
                                    </tr>
                                    
@@ -191,7 +209,7 @@ export default class ResultWindow extends React.Component {
                              }
                           </tbody>   
                           </table>
-                          </div>
+                    </div>
                 </div>
                 );
         res.footer = this.playAgainButton();

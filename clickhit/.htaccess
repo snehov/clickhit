@@ -1,0 +1,27 @@
+DirectoryIndex engine.php #index.php #
+
+#---lighthouse hraccess--------------------
+ErrorDocument 404 /error404.php
+#ErrorDocument 500 /500error.php
+
+RewriteEngine On
+RewriteRule ^pics/.*$ - [PT]
+RewriteRule ^admin/.*$ - [PT]
+RewriteRule ^objednat/.*$ - [PT]
+ 
+
+#RewriteCond %{HTTP_HOST} ^kocourkova.net [NC]
+#RewriteRule ^(.*)$ http://www.kocourkova.net/$1 [L,R=301]
+
+
+
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/$ %{DOCUMENT_ROOT}/engine.php?sa=$1&sb=$2&sc=$3&sd=$4&w=1 [L,QSA]
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/$ %{DOCUMENT_ROOT}/_mysys/engine.php?sa=$1&sb=$2&sc=$3&w=1 [L,QSA]
+RewriteRule ^([^/]+)/([^/]+)/$ %{DOCUMENT_ROOT}/_mysys/engine.php?sa=$1&sb=$2&w=1 [L,QSA]
+RewriteRule ^([^/]+)/$ %{DOCUMENT_ROOT}/_mysys/engine.php?sa=$1&w=1 [L,QSA]
+
+
+
+ # ExpiresActive On
+ # ExpiresByType  application/pdf  A17200
+

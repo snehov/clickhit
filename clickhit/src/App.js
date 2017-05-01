@@ -85,12 +85,12 @@ class App extends Component {
   plusOne = () =>{
       this.setState({targetNO: this.state.targetNO + 1}); 
   }
-  loadScore(){
+  loadScore(inputMethod){ //group parametr jeste pribude
       console.log("loading score");
-      this.serverData.loadScore("all");
+      this.serverData.loadScore(inputMethod, 'group');
   }
   loadResults(data){
-      console.log("mame score data v rootu");
+      console.log("mame score data nacteny");
      
       this.dialogWindow.setState({window:'othersScore', resultsData: data.data});
   }
