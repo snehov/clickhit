@@ -30,12 +30,16 @@ export default class ResultWindow extends React.Component {
         if(name == "inputMethod"){
             this.viewInputMethodScore  = value;
             this.props.app.setCookieDevice(value);
-            this.props.app.setState({inputDevice:value});
+            // prop for user settings
+            this.props.app.setState({inputDevice: value});
+            // prop just for filtering result list
+            //this.props.app.setState({viewScoreInput: value});
             
         }
         if(name == "scoreInputMethod"){
-            //this.setState({viewInputMethodScore: value});
-            this.viewInputMethodScore = value;
+            //this.props.app.setState({viewScoreInput: value});
+            this.props.app.viewScoreInput = value;
+            //this.viewInputMethodScore = value;
             this.props.app.loadScore(value);
         }
     }
@@ -56,6 +60,9 @@ export default class ResultWindow extends React.Component {
         }else{
             this.viewInputMethodScore = this.props.app.cookies.get('inputDevice');
             this.handleWindowChange('saveLoadResults');
+            
+            //this.props.app.setState({viewScoreInput: this.props.app.cookies.get('inputDevice')});
+            this.props.app.viewScoreInput = this.props.app.cookies.get('inputDevice');
         }
     }
     goPlayGame(){
@@ -209,7 +216,7 @@ export default class ResultWindow extends React.Component {
                 <div>
                     <div   className="higherLines">
                         Select games according to input method: &nbsp; 
-                        <select value={this.viewInputMethodScore} name="scoreInputMethod" onChange={this.handleInputChanges} >
+                        <select value={this.props.app.viewScoreInput} name="scoreInputMethod" onChange={this.handleInputChanges} >
                             <option value="*"> -all- </option>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>

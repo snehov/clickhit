@@ -18,6 +18,7 @@ class App extends Component {
       var groupName = "";
       var inputDevice = "";
       this.viewScoreList = "all";
+      this.viewScoreInput = "*";
       if(this.cookies.get('userName')){
           userName = this.cookies.get('userName');
           groupName = this.cookies.get('groupName');
@@ -37,8 +38,9 @@ class App extends Component {
                     resultData: {avgTime:0},
                     userName: userName, 
                     groupName: groupName,
-                    inputDevice: inputDevice,
-                    viewScoreList: 'all'
+                    inputDevice: inputDevice/*,
+                    viewScoreInput: "*"*/
+                   
                 };
       this.numTargets = 3;
       
@@ -95,6 +97,7 @@ class App extends Component {
   }
   loadScore(inputMethod){ //group parametr jeste pribude
       var group = "";
+      inputMethod = this.viewScoreInput;//this.state.viewScoreInput;
       console.log("load score s "+inputMethod+", "+group+"||| a this.viewScorelist: "+this.viewScoreList);
   
       /*
@@ -109,7 +112,7 @@ class App extends Component {
       }else{
           group = '';
       }
-      console.log("loading score s hodnotou grupy: "+group);
+      console.log("loading score s hodnotou metody: "+inputMethod+" a grupy: "+group);
       this.serverData.loadScore(inputMethod, group);
   }
   
