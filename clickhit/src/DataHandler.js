@@ -47,7 +47,8 @@ export default class DataHandler extends React.Component {
                 'score': data.score,
                 'avgTime': data.avgTime,
                 'input': data.input,   
-                'missed': data.missed
+                'missed': data.missed,
+                'groupName': data.groupName
             }
                     )
                 .then(
@@ -62,7 +63,7 @@ export default class DataHandler extends React.Component {
                 )
     }
     loadScore(inputMethod, group){
-        console.log("zapis score na server");
+        console.log("|||====>>>load score with inputmethod: "+inputMethod+", and group: "+group);
         axios.post(`http://snowsoft.cz/clickhit/data.php?akce=loadScore`, 
             {   
                 'input': inputMethod,

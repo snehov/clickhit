@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import { Grid, Row, Col } from 'react-bootstrap';
+//import { Grid, Row, Col } from 'react-bootstrap';
 import ControlPanel from './ControlPanel';
 import ScoreCalculator, {AddHitScore} from './ScoreCalculator';
 import Target from './Target';
@@ -15,9 +15,12 @@ class App extends Component {
       super();
       this.cookies = new Cookies();
       var userName = "";
+      var groupName = "";
       var inputDevice = "";
+      this.viewScoreList = "all";
       if(this.cookies.get('userName')){
           userName = this.cookies.get('userName');
+          groupName = this.cookies.get('groupName');
           inputDevice = this.cookies.get('inputDevice');
           console.log("známý hráč: "+ userName+", na: "+inputDevice);
       }else{
@@ -33,7 +36,9 @@ class App extends Component {
                     play: false,
                     resultData: {avgTime:0},
                     userName: userName, 
-                    inputDevice: inputDevice
+                    groupName: groupName,
+                    inputDevice: inputDevice,
+                    viewScoreList: 'all'
                 };
       this.numTargets = 3;
       
@@ -41,6 +46,9 @@ class App extends Component {
   
   setCookieName (name){
       this.cookies.set('userName', name, { path: '/' });
+  }
+  setCookieGroup (name){
+      this.cookies.set('groupName', name, { path: '/' });
   }
   setCookieDevice(value){
       this.cookies.set('inputDevice', value, { path: '/' });
@@ -86,9 +94,26 @@ class App extends Component {
       this.setState({targetNO: this.state.targetNO + 1}); 
   }
   loadScore(inputMethod){ //group parametr jeste pribude
-      console.log("loading score");
-      this.serverData.loadScore(inputMethod, 'group');
+      var group = "";
+      console.log("load score s "+inputMethod+", "+group+"||| a this.viewScorelist: "+this.viewScoreList);
+  
+      /*
+      if((group === '') || (group === 'all')){
+          this.setState({viewScoreList: 'all'});
+      }else{
+          this.setState({viewScoreList: 'group'});
+      }*/
+                    
+      if(this.viewScoreList /*this.state.viewScoreList */ === 'group'){
+          group = this.state.groupName;
+      }else{
+          group = '';
+      }
+      console.log("loading score s hodnotou grupy: "+group);
+      this.serverData.loadScore(inputMethod, group);
   }
+  
+  // load fetched score from server to table and show
   loadResults(data){
       console.log("mame score data nacteny");
      

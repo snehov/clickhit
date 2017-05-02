@@ -4,9 +4,8 @@ import { Modal, Button,Grid, Row, Col } from 'react-bootstrap';
 export default class ResultWindow extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {window: 'welcome', viewInputMethodScore:'finger'}
+        this.state = {window: 'welcome', viewInputMethodScore:'finger', groupName: ''}
         this.handleInputChanges = this.handleInputChanges.bind(this);
-        this.onloadMyInputDevice = this.onloadMyInputDevice.bind(this);
         this.handleNameSubmit = this.handleNameSubmit.bind(this);
         this.viewInputMethodScore = 'all';
     }
@@ -24,6 +23,10 @@ export default class ResultWindow extends React.Component {
             this.props.app.setCookieName(value);
             this.props.app.setState({userName:value});
         }
+        if(name == "groupName"){
+            this.props.app.setCookieGroup(value);
+            this.props.app.setState({groupName:value});
+        }
         if(name == "inputMethod"){
             this.viewInputMethodScore  = value;
             this.props.app.setCookieDevice(value);
@@ -36,10 +39,7 @@ export default class ResultWindow extends React.Component {
             this.props.app.loadScore(value);
         }
     }
-    onloadMyInputDevice(event){
-        //this.viewInputMethodScore = event.target.value;
-        console.log("onloadvalue: ", event.target.value);
-    }
+
     handleNameSubmit(event){
         event.preventDefault();
         this.props.app.setCookieName(this.props.app.state.userName);
@@ -54,12 +54,8 @@ export default class ResultWindow extends React.Component {
         if(this.props.app.state.userName==""){
             alert("Fill in your nickname");
         }else{
-            //this.viewInputMethodScore = 'mouse';//this.props.app.state.inputDevice;
-            //let ip = this.props.app.state.inputDevice;
-            //this.setState({viewInputMethodScore: ip});
-             this.viewInputMethodScore = this.props.app.cookies.get('inputDevice');
+            this.viewInputMethodScore = this.props.app.cookies.get('inputDevice');
             this.handleWindowChange('saveLoadResults');
-            //this.setState({viewInputMethodScore: data.input});
         }
     }
     goPlayGame(){
@@ -127,9 +123,7 @@ export default class ResultWindow extends React.Component {
                     Your score is: <span className="score">{this.props.app.state.score}</span><br/>
                         Your average react time is: <span className="avgTime">{this.props.app.state.resultData.avgTime}</span> ms <br/>
                         Select yout input method:
-                        <select value={this.props.app.state.inputDevice} name="inputMethod" 
-                                onChange={this.handleInputChanges}
-                                onLoad={this.onloadMyInputDevice}>
+                        <select value={this.props.app.state.inputDevice} name="inputMethod" onChange={this.handleInputChanges}>
                             <option value="mouse">Mouse</option>
                             <option value="touchpad">Touchpad (laptop)</option>
                             <option value="finger">Finger (tablet/mobile)</option>
@@ -138,6 +132,9 @@ export default class ResultWindow extends React.Component {
                         <br/>
                         Your nickname: 
                         <input type="text" name="userName"  value={this.props.app.state.userName} onChange={this.handleInputChanges}/>
+                        <br />
+                        To challenge your friends, fill your company/group name:
+                        <input type="text" name="groupName"  value={this.props.app.state.groupName} onChange={this.handleInputChanges}/>
                     </div>);
             
             res.footer =(<div>
@@ -153,7 +150,8 @@ export default class ResultWindow extends React.Component {
             score: this.props.app.state.score, 
             input: this.props.app.state.inputDevice, 
             avgTime: this.props.app.state.resultData.avgTime,
-            missed: this.props.app.state.resultData.missed
+            missed: this.props.app.state.resultData.missed,
+            groupName: this.props.app.state.groupName
         };
         
         this.props.app.serverData.insertScore(data);
@@ -162,6 +160,19 @@ export default class ResultWindow extends React.Component {
         
         return {title: 'ClickHit! Scorelist', body: 'Loading data...', footer:''}
     }
+    changeScoreView(view){
+        if(view == "group"){
+            //this.props.app.setState({viewScoreList: 'group'});
+            this.props.app.viewScoreList = 'group';
+            console.log(">>menim vewscorelit na group >"+this.props.app.viewScoreList );
+        }else{
+            //this.props.app.setState({viewScoreList: 'all'});
+            this.props.app.viewScoreList = 'all';
+            console.log(">>menim vewscorelit na all >"+this.props.app.viewScoreList );
+        }
+        
+        this.props.app.loadScore(this.props.app.state.inputDevice);
+    }
     othersScore() {
         var res = {};
         const data = this.state.resultsData;
@@ -169,7 +180,30 @@ export default class ResultWindow extends React.Component {
         res.title = 'ClickHit! Scorelist';
         const userName = this.props.app.state.userName;
         //this.setState({viewInputMethodScore: data.input});
-       
+        var groupButton = "";
+        var allScoreButton = "";
+        
+        if(this.props.app.viewScoreList == 'all'){
+            allScoreButton = <span>All score Toplist</span>;
+            if(this.props.app.state.groupName != ''){
+                groupButton = (<button 
+                                onClick={(e) => this.changeScoreView('group')}>
+                                Show "{this.props.app.state.groupName}" group only 
+                               </button>);
+            }
+        }else{
+            allScoreButton = <button 
+                                onClick={(e) => this.changeScoreView('all')}>
+                                All score Toplist
+                                </button>;
+            if(this.props.app.state.groupName != ''){
+                groupButton = (<span>
+                                Show "{this.props.app.state.groupName}" group only 
+                               </span>);
+            }
+        }
+         
+        
         
         res.body = (
                 <div>
@@ -182,13 +216,14 @@ export default class ResultWindow extends React.Component {
                             <option value="finger">Finger (tablet/mobile)</option>
                             <option value="other">Other (console, etc..)</option>
                         </select>
-                     </div>    
+                     </div>
+                     {allScoreButton} / {groupButton}
                      <div>
                         <table className="resultTable">
                         <thead>
                             <tr>
                             <th>#</th><th>User</th><th>Score</th><th className="hidden-xs">Avg react time</th>
-                            <th className="hidden-xs">Missed</th><th>Input method</th><th>Played</th>
+                            <th className="hidden-xs">Missed</th><th>Input method</th><th className="hidden-xs">Group</th><th>Played</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,11 +233,11 @@ export default class ResultWindow extends React.Component {
                                 if(row.nick == userName){
                                     cln = "me"
                                 };
-                                return <tr key={row.idsc}
+                                return <tr key={i}
                                             className={cln}>
-                                        <td>{i+1}</td>    
-                                        <td>{row.nick}</td><td>{row.score}</td><td className="hidden-xs">{row.avg_time} ms</td>
-                                        <td className="hidden-xs">{row.missed}</td><td>{row.input}</td><td>{row.games}x</td>
+                                        <td>{i+1}</td><td>{row.nick}</td><td>{row.score}</td><td className="hidden-xs">{row.avg_time} ms</td>
+                                        <td className="hidden-xs">{row.missed}</td><td>{row.input}</td>
+                                        <td className="hidden-xs">{row.idg}</td><td>{row.games}x</td>
                                    </tr>
                                    
                               })       
