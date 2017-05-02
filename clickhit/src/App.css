@@ -104,3 +104,10 @@ visible, .targetVisible {
     background-color: #edfcf0; }
   .resultTable .me * {
     font-weight: bold; }
+
+.p {
+  margin-top: 9px;
+  margin-bottom: 9px; }
+
+.gray {
+  color: #a09f9f; }

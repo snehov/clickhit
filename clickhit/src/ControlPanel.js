@@ -10,7 +10,7 @@ export default class ControlPanel extends React.Component{
 
     render() {
         let userName;
-        if(this.props.app.state.userName != ""){
+        if (this.props.app.state.userName != "") {
             userName = this.props.app.state.userName;
         }
         return (
@@ -26,7 +26,7 @@ export default class ControlPanel extends React.Component{
                         <Col xs={6} sm={4} md={4}>
                             <Row>
                                 <Col xs={4} md={6}>{this.props.app.state.targetNO}/{this.props.app.numTargets}</Col>
-                                <Col xs={8} md={6} className="score" onClick={(e)=>this.props.app.loadScore()}>{this.props.score}</Col>
+                                <Col xs={8} md={6} className="score" onClick={(e) => this.props.app.loadScore()}>{this.props.score}</Col>
                             </Row>
                         </Col>
                 

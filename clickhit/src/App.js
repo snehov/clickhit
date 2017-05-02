@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-//import logo from './logo.svg';
 import './App.css';
-//import { Grid, Row, Col } from 'react-bootstrap';
 import ControlPanel from './ControlPanel';
 import ScoreCalculator, {AddHitScore} from './ScoreCalculator';
 import Target from './Target';
 import ResultWindow from './ResultWindow';
-
 import Cookies from 'universal-cookie';
 import DataHandler from './DataHandler';
 
@@ -27,8 +24,7 @@ class App extends Component {
       }else{
           inputDevice = "mouse";
       }
-     //cookies.set('userName', 'Sněha2', { path: '/' });
-     //this.setCookieName();
+      
       this.state = {score: 0, 
                     targetNO: 0, 
                     missClicks: 0, 
@@ -38,11 +34,10 @@ class App extends Component {
                     resultData: {avgTime:0},
                     userName: userName, 
                     groupName: groupName,
-                    inputDevice: inputDevice/*,
-                    viewScoreInput: "*"*/
+                    inputDevice: inputDevice
                    
                 };
-      this.numTargets = 3;
+      this.numTargets = 7;
       
   }   
   
@@ -63,17 +58,13 @@ class App extends Component {
       var tmp = [] = this.state.hitStats;
       tmp.push(hitStats);
       this.setState({'hitStats': tmp });
-      // -------------------------
       this.setScore(newScore);
-      //console.log("hitstats: ", this.state.hitStats);
   }
   setScore(score){
       this.setState({score: score});
   }
   playGame(){
-      console.log('volam plat na rooru');
         this.target.playGame();
-        //this.serverData.insertScore();
   }
   render() {
     return (
@@ -84,42 +75,29 @@ class App extends Component {
                 <ScoreCalculator  ref="pokus"/>
                 <ResultWindow showResultWindow={this.state.showResultWindow} app={this} ref={instance => { this.dialogWindow = instance;}} />
                 <DataHandler ref={instance => { this.serverData = instance; }} app={this} />
-                        
-                
-            </div>
-            
-                
+            </div>        
     );
   }
    
   plusOne = () =>{
       this.setState({targetNO: this.state.targetNO + 1}); 
   }
-  loadScore(inputMethod){ //group parametr jeste pribude
+  loadScore(inputMethod){ 
       var group = "";
-      inputMethod = this.viewScoreInput;//this.state.viewScoreInput;
-      console.log("load score s "+inputMethod+", "+group+"||| a this.viewScorelist: "+this.viewScoreList);
-  
-      /*
-      if((group === '') || (group === 'all')){
-          this.setState({viewScoreList: 'all'});
-      }else{
-          this.setState({viewScoreList: 'group'});
-      }*/
-                    
-      if(this.viewScoreList /*this.state.viewScoreList */ === 'group'){
+      inputMethod = this.viewScoreInput;
+      
+      if(this.viewScoreList === 'group'){
           group = this.state.groupName;
       }else{
           group = '';
       }
-      console.log("loading score s hodnotou metody: "+inputMethod+" a grupy: "+group);
+   
       this.serverData.loadScore(inputMethod, group);
   }
   
   // load fetched score from server to table and show
   loadResults(data){
       console.log("mame score data nacteny");
-     
       this.dialogWindow.setState({window:'othersScore', resultsData: data.data});
   }
   over(){
@@ -134,12 +112,10 @@ class App extends Component {
       avgTime = Math.round(sumtime/tmp.length);    
       const resultData = {'totalScore': this.state.score, 'avgTime': avgTime, 'missed': missed };
       this.setState({'resultData': resultData ,showResultWindow: true});
-      //alert('konec, avgtime: '+ avgTime+', missed: '+missed);
   }
   missClick = () =>{
       this.setState({missClicks: this.state.missClicks + 1}); 
   }
-  
 };
 
 export default App;
